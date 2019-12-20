@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="cn.edu.jxau.jwc.mapper.ChooseMapper">
+
+    <resultMap id="BaseResultMap" type="Student">
+        <id property="chooseIndex" column="choose_index"/>
+        <result property="chooseId" column="choose_id"/>
+        <result property="chooseType" column="choose_type"/>
+    </resultMap>
+
+    <insert id="insertNewChoose" parameterType="Choose">
+        INSERT INTO bu_choose (choose_id, choose_type)
+        VALUES (#{chooseId}, #{chooseType})
+    </insert>
+
+    <delete id="deleteChoose" parameterType="Choose">
+        DELETE
+        FROM bu_choose
+        WHERE choose_index = #{chooseIndex}
+    </delete>
+
+
+    <select id="findChoose" resultMap="BaseResultMap">
+        SELECT *
+        FROM bu_choose
+        WHERE choose_id = #{chooseId}
+          AND choose_type = #{chooseType}
+    </select>
+
+
+    <delete id="deleteTypeChoose" parameterType="int">
+        DELETE
+        FROM bu_choose
+        WHERE choose_type = #{chooseType}
+    </delete>
+
+
+    <delete id="deleteAcademyStudentChoose" parameterType="Student">
+        DELETE
+        FROM bu_choose
+        WHERE choose_type = 1
+          AND (SELECT sc_student.student_academy FROM sc_student WHERE sc_student.student_id = bu_choose.choose_id) = #{academy}
+    </delete>
+
+
+    <delete id="deleteAcademyTeacherChoose" parameterType="Teacher">
+        DELETE
+        FROM bu_choose
+        WHERE choose_type = 2
+          AND (SELECT sc_teacher.teacher_academy FROM sc_teacher WHERE sc_teacher.teacher_id = bu_choose.choose_id) = #{academy}
+    </delete>
+
+    <delete id="deleteAllChoose">
+        DELETE
+        FROM bu_choose
+    </delete>
+
+</mapper>

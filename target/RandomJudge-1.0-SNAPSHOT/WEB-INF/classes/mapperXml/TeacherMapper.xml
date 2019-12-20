@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="cn.edu.jxau.jwc.mapper.TeacherMapper">
+    <resultMap id="BaseResultMap" type="Teacher">
+        <id property="id" column="teacher_id"/>
+        <result property="name" column="teacher_name"/>
+        <result property="gender" column="teacher_gender"/>
+        <result property="academy" column="teacher_academy"/>
+        <result property="telephone" column="teacher_telephone"/>
+        <result property="workTime" column="teacher_work_time"/>
+    </resultMap>
+
+    <insert id="insertTeacher" parameterType="Teacher">
+        INSERT INTO sc_teacher (teacher_id, teacher_name, teacher_gender, teacher_academy, teacher_telephone,
+                                teacher_work_time)
+        VALUES (#{id}, #{name}, #{gender}, #{academy}, #{telephone}, #{workTime})
+    </insert>
+
+    <select id="findTeacher" parameterType="Teacher" resultMap="BaseResultMap">
+        SELECT *
+        FROM sc_teacher
+        WHERE sc_teacher.teacher_id = #{id}
+    </select>
+
+    <select id="findAcademyAllTeacher" parameterType="Teacher" resultMap="BaseResultMap">
+        SELECT *
+        FROM sc_teacher
+        WHERE teacher_academy = #{academy}
+    </select>
+
+    <select id="findAcademyAllSelectTeacher" parameterType="Teacher" resultMap="BaseResultMap">
+        SELECT *
+        FROM bu_choose
+                 LEFT JOIN sc_teacher ON teacher_id = choose_id
+        WHERE sc_teacher.teacher_academy = #{academy}
+          AND choose_type = 2
+    </select>
+
+    <select id="findAllSelectTeacher" parameterType="Teacher" resultMap="BaseResultMap">
+        SELECT *
+        FROM bu_choose
+                 LEFT JOIN sc_teacher ON choose_id = teacher_id
+        WHERE choose_type = 2
+    </select>
+
+    <select id="findAllTeacherLimit" resultMap="BaseResultMap">
+        SELECT *
+        FROM sc_teacher
+        LIMIT #{lineStart},#{pageSize}
+    </select>
+
+
+    <select id="findRandomTeacher" resultMap="BaseResultMap">
+        SELECT *
+        FROM sc_teacher
+        WHERE teacher_academy = #{academyName}
+        LIMIT #{lineStart},#{randomSize}
+    </select>
+
+    <select id="countAcademyTeacher" parameterType="String" resultType="int">
+        SELECT COUNT(*)
+        FROM sc_teacher
+        WHERE teacher_academy = #{academyName}
+    </select>
+</mapper>
